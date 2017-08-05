@@ -36,6 +36,12 @@ export function integer(value) {
   }
 }
 
+export function positiveInteger(value) {
+  if (Number(value) < 0) {
+    return 'Must be a positive integer';
+  }
+}
+
 export function oneOf(enumeration) {
   return value => {
     if (!~enumeration.indexOf(value)) {

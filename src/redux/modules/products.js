@@ -86,19 +86,26 @@ export function isLoaded(globalState) {
   return globalState.products && globalState.products.loaded;
 }
 
-export function load() {
+export function init() {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: (client) => client.get('/widget/load')
+    promise: (client) => client.get('/products/init')
   };
 }
 
-export function save(widget) {
+export function load() {
+  return {
+    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
+    promise: (client) => client.get('/products/load')
+  };
+}
+
+export function save(product) {
   return {
     types: [SAVE, SAVE_SUCCESS, SAVE_FAIL],
-    id: widget.id,
-    promise: (client) => client.post('/widget/update', {
-      data: widget
+    id: product.id,
+    promise: (client) => client.post('/products/update', {
+      data: product
     })
   };
 }

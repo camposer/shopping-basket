@@ -30,35 +30,40 @@ export default class Products extends Component {
     loading: PropTypes.bool,
     initializeWithKey: PropTypes.func.isRequired,
     editing: PropTypes.object.isRequired,
-    load: PropTypes.func.isRequired,
+    // load: PropTypes.func.isRequired,
+    init: PropTypes.func.isRequired,
     editStart: PropTypes.func.isRequired
   };
 
+  calculateTotal(products) {
+    return products.reduce((acc, product) => (acc + product.total), 0);
+  }
+
   render() {
-    const handleEdit = (widget) => {
+    const handleEdit = (product) => {
       const {editStart} = this.props; // eslint-disable-line no-shadow
-      return () => editStart(String(widget.id));
+      return () => editStart(String(product.id));
     };
-    const {products, error, editing, loading, load} = this.props;
+    const {products, error, editing, loading, init} = this.props;
     let refreshClassName = 'fa fa-refresh';
     if (loading) {
       refreshClassName += ' fa-spin';
     }
     const styles = require('./Products.scss');
     return (
-      <div className={styles.widgets + ' container'}>
+      <div className={styles.products + ' container'}>
         <h1>
           Products
-          <button className={styles.refreshBtn + ' btn btn-success'} onClick={load}>
-            <i className={refreshClassName}/> {' '} Reload
+          <button className={styles.refreshBtn + ' btn btn-success'} onClick={init}>
+            <i className={refreshClassName}/>
           </button>
         </h1>
         <Helmet title="Products"/>
         <p>
-          Lorem ipsum
+          Basic shopping basket calculator based on a list of fixed products and prices. There are no limits for the products' quantities.
         </p>
         <p>
-          This products are stored in your session, so feel free to edit it and refresh.
+          <em>Modify and press refresh button for cleaning actual values</em>
         </p>
         {error &&
         <div className="alert alert-danger" role="alert">
@@ -70,10 +75,10 @@ export default class Products extends Component {
         <table className="table table-striped">
           <thead>
           <tr>
-            <th className={styles.idCol}>ID</th>
-            <th className={styles.colorCol}>Color</th>
-            <th className={styles.sprocketsCol}>Sprockets</th>
-            <th className={styles.ownerCol}>Owner</th>
+            <th className={styles.nameCol}>Name</th>
+            <th className={styles.priceCol}>Price</th>
+            <th className={styles.quantityCol}>Quantity</th>
+            <th className={styles.totalCol}>Total</th>
             <th className={styles.buttonCol}></th>
           </tr>
           </thead>
@@ -82,10 +87,10 @@ export default class Products extends Component {
             products.map((product) => editing[product.id] ?
               <ProductForm formKey={String(product.id)} key={String(product.id)} initialValues={product}/> :
               <tr key={product.id}>
-                <td className={styles.idCol}>{product.id}</td>
-                <td className={styles.colorCol}>{product.color}</td>
-                <td className={styles.sprocketsCol}>{product.sprocketCount}</td>
-                <td className={styles.ownerCol}>{product.owner}</td>
+                <td className={styles.nameCol}>{product.name}</td>
+                <td className={styles.priceCol}>{product.price}</td>
+                <td className={styles.quantityCol}>{product.quantity}</td>
+                <td className={styles.totalCol}>{product.total}</td>
                 <td className={styles.buttonCol}>
                   <button className="btn btn-primary" onClick={handleEdit(product)}>
                     <i className="fa fa-pencil"/> Edit
@@ -94,9 +99,15 @@ export default class Products extends Component {
               </tr>)
           }
           </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan="3" className="text-right"><strong>Total</strong></td>
+              <td className="text-center"><strong>{this.calculateTotal(products)}</strong></td>
+              <td className="text-center"></td>
+            </tr>
+          </tfoot>
         </table>}
       </div>
     );
   }
 }
-

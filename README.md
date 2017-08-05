@@ -1,6 +1,8 @@
 # Shopping Basket
 
-Shopping Basket example based on [React Redux Universal Hot Example](https://github.com/erikras/react-redux-universal-hot-example)
+Shopping Basket example based on [React Redux Universal Hot Example](https://github.com/erikras/react-redux-universal-hot-example).
+
+Isomorphic responsive Web app. Developed with React/Redux and Express.
 
 ## Requirements
 
