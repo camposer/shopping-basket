@@ -2,7 +2,7 @@
 
 Shopping Basket example based on [React Redux Universal Hot Example](https://github.com/erikras/react-redux-universal-hot-example).
 
-Isomorphic responsive Web app. Developed with React/Redux and Express.
+Isomorphic responsive Web app. Developed with React/Redux and Express. All API operations are managed in memory.
 
 ## Requirements
 
@@ -19,6 +19,18 @@ Items are presented one at a time, in a list, identified by name - for example "
 
 ```bash
 npm install
+```
+
+## Testing
+
+- API
+```bash
+npm run test-node
+```
+
+- Front (not implemented this time)
+```bash
+npm run test
 ```
 
 ## Running Dev Server

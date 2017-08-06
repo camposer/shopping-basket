@@ -1,11 +1,15 @@
 import React, {Component, PropTypes} from 'react';
 import Helmet from 'react-helmet';
 import {connect} from 'react-redux';
+import {initializeWithKey} from 'redux-form';
+import {asyncConnect} from 'redux-async-connect';
+
 import * as productActions from 'redux/modules/products';
 import {isLoaded, load as loadProducts} from 'redux/modules/products';
-import {initializeWithKey} from 'redux-form';
-import { ProductForm } from 'components';
-import { asyncConnect } from 'redux-async-connect';
+import {ProductForm} from 'components';
+
+// TODO Move to a shared place (api + front)
+const PAPAYA_ID = 4;
 
 @asyncConnect([{
   deferred: true,
@@ -30,7 +34,6 @@ export default class Products extends Component {
     loading: PropTypes.bool,
     initializeWithKey: PropTypes.func.isRequired,
     editing: PropTypes.object.isRequired,
-    // load: PropTypes.func.isRequired,
     init: PropTypes.func.isRequired,
     editStart: PropTypes.func.isRequired
   };
@@ -55,15 +58,15 @@ export default class Products extends Component {
         <h1>
           Products
           <button className={styles.refreshBtn + ' btn btn-success'} onClick={init}>
-            <i className={refreshClassName}/>
+            <i className={refreshClassName}/> Refresh
           </button>
         </h1>
         <Helmet title="Products"/>
         <p>
-          Basic shopping basket calculator based on a list of fixed products and prices. There are no limits for the products' quantities.
+          Basic shopping basket calculator based on a fixed list of products and prices. There are no products' quantities limit.
         </p>
         <p>
-          <em>Modify and press refresh button for cleaning actual values</em>
+          <em>** Values are stored in HTTP session. Press refresh button to clean everything and start again.</em>
         </p>
         {error &&
         <div className="alert alert-danger" role="alert">
@@ -76,9 +79,9 @@ export default class Products extends Component {
           <thead>
           <tr>
             <th className={styles.nameCol}>Name</th>
-            <th className={styles.priceCol}>Price</th>
+            <th className={styles.priceCol}>Price (cts)</th>
             <th className={styles.quantityCol}>Quantity</th>
-            <th className={styles.totalCol}>Total</th>
+            <th className={styles.totalCol}>Total (cts)</th>
             <th className={styles.buttonCol}></th>
           </tr>
           </thead>
@@ -87,7 +90,10 @@ export default class Products extends Component {
             products.map((product) => editing[product.id] ?
               <ProductForm formKey={String(product.id)} key={String(product.id)} initialValues={product}/> :
               <tr key={product.id}>
-                <td className={styles.nameCol}>{product.name}</td>
+                <td className={styles.nameCol}>
+                  {product.name}
+                  {product.id === PAPAYA_ID && <div><small><em>Buy 3 for the price of 2</em></small></div>}
+                </td>
                 <td className={styles.priceCol}>{product.price}</td>
                 <td className={styles.quantityCol}>{product.quantity}</td>
                 <td className={styles.totalCol}>{product.total}</td>
